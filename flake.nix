@@ -2,7 +2,7 @@
   description = "adeci tool pkgs wrapped with configs";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     flake-utils.url = "github:numtide/flake-utils";
     wrappers = {
       url = "github:adeci/wrappers?ref=adeci-wrappers";
@@ -26,7 +26,7 @@
           btop = ./wrappers/btop/module.nix;
           kitty = ./wrappers/kitty/module.nix;
           sway = ./wrappers/sway/module.nix;
-          waybar = ./wrappers/waybar/module.nix;
+          # waybar = ./wrappers/waybar/module.nix;
         };
 
         packages = builtins.mapAttrs (

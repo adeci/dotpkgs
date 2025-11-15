@@ -13,6 +13,6 @@ in
   sway =
     (wrappers.wrapperModules.sway.apply {
       inherit pkgs;
-      swayconfig.path = swayConfig;
+      swayConfig.path = swayConfig;
     }).wrapper;
 }
