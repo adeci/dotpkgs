@@ -4,7 +4,8 @@
     (wrappers.wrapperModules.waybar.apply {
       inherit pkgs;
 
-      waybarconfig.path = ./config;
+      configFile.path = ./config;
+      style.path = ./style.css;
 
     }).wrapper;
 }

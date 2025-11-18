@@ -26,7 +26,7 @@
           btop = ./wrappers/btop/module.nix;
           kitty = ./wrappers/kitty/module.nix;
           sway = ./wrappers/sway/module.nix;
-          # waybar = ./wrappers/waybar/module.nix;
+          waybar = ./wrappers/waybar/module.nix;
         };
 
         packages = builtins.mapAttrs (
