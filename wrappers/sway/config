@@ -34,7 +34,9 @@ output eDP1 pos 0 0 res 2880x1920@120Hz
 
 ### Autostart
 #
+exec swaybg -i @backgroundImage@
 exec waybar
+exec mako
 
 ### Key bindings
 #
@@ -44,7 +46,7 @@ exec waybar
     bindsym $mod+Return exec $term
 
     # Start a terminal in the same directory as the focused terminal
-    bindsym $mod+Shift+Return exec @openTerminalCwdScript@
+    bindsym $mod+Shift+Return exec @openKittyCwdScript@
 
     # Kill focused window
     bindsym $mod+q kill

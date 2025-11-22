@@ -5,7 +5,7 @@
       inherit pkgs;
 
       configFile.path = ./config;
-      style.path = ./style.css;
+      "style.css".path = ./style.css;
 
     }).wrapper;
 }
