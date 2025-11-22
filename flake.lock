@@ -20,16 +20,16 @@
     },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1763049705,
-        "narHash": "sha256-A5LS0AJZ1yDPTa2fHxufZN++n8MCmtgrJDtxFxrH4S8=",
+        "lastModified": 1763421233,
+        "narHash": "sha256-Stk9ZYRkGrnnpyJ4eqt9eQtdFWRRIvMxpNRf4sIegnw=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "3acb677ea67d4c6218f33de0db0955f116b7588c",
+        "rev": "89c2b2330e733d6cdb5eae7b899326930c2c0648",
         "type": "github"
       },
       "original": {
         "owner": "NixOS",
-        "ref": "nixos-25.05",
+        "ref": "nixos-unstable",
         "repo": "nixpkgs",
         "type": "github"
       }
@@ -63,11 +63,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1763455609,
-        "narHash": "sha256-rboaKHhY2M/HC4LqBZc6KX3ZakwpLgrNZj9bpbjAXZM=",
+        "lastModified": 1763786680,
+        "narHash": "sha256-tNKxG9qfjB+IQKNL+dpp8s+FW7kuQZ0pvA6l3OQicOs=",
         "owner": "adeci",
         "repo": "wrappers",
-        "rev": "10c79ff3e8e1e86a1c90e335db24f662470327d7",
+        "rev": "4fa69918b445f40a854ec9e10d5a827716e7d43e",
         "type": "github"
       },
       "original": {
