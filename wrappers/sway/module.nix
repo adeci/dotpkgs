@@ -4,10 +4,9 @@ let
     url = "https://raw.githubusercontent.com/adeci/wallpapers/main/tokyo-night/tokyo-night_nix.png";
     sha256 = "sha256-W5GaKCOiV2S3NuORGrRaoOE2x9X6gUS+wYf7cQkw9CY=";
   };
-  openKittyCwdScript = pkgs.writeShellScript "open-kitty-cwd" ''
-    PATH=${pkgs.swaycwd}/bin:$PATH
-    ${builtins.readFile ./scripts/open-kitty-cwd.sh}
-  '';
+  openKittyCwdScript = pkgs.writeShellScript "open-kitty-cwd" (
+    builtins.readFile ./scripts/open-kitty-cwd.sh
+  );
   swayConfig = pkgs.runCommand "sway-config" { } ''
     substitute ${./config} $out \
       --replace "@backgroundImage@" "${backgroundImage}" \

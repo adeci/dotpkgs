@@ -22,21 +22,22 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        wrapperPaths = {
-          btop = ./wrappers/btop/module.nix;
-          kitty = ./wrappers/kitty/module.nix;
-          sway = ./wrappers/sway/module.nix;
-          waybar = ./wrappers/waybar/module.nix;
-          fuzzel = ./wrappers/fuzzel/module.nix;
-        };
+        wrapperDirs = builtins.readDir ./wrappers;
 
-        packages = builtins.mapAttrs (
-          name: path:
-          let
-            module = import path { inherit pkgs wrappers; };
-          in
-          module.${name}
-        ) wrapperPaths;
+        wrapperNames = builtins.attrNames (
+          pkgs.lib.filterAttrs (name: type: type == "directory") wrapperDirs
+        );
+
+        packages = builtins.listToAttrs (
+          map (name: {
+            inherit name;
+            value =
+              let
+                module = import ./wrappers/${name}/module.nix { inherit pkgs wrappers; };
+              in
+              module.${name};
+          }) wrapperNames
+        );
       in
       {
         packages = packages;
