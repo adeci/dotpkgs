@@ -12,23 +12,31 @@ window#waybar {
 }
 
 #workspaces button {
-  padding: 0 6px;
-  color: #888888;
-  background-color: transparent;
+  padding: 0 4px;
+  margin: 0;
+  min-width: 12px;
+  color: #555555;
+  background: transparent;
+  box-shadow: none;
+  text-shadow: none;
+  border: none;
 }
 
 #workspaces button:hover {
-  color: #ffffff;
+  color: #888888;
+  background: transparent;
+  box-shadow: none;
 }
 
 #workspaces button.focused {
   color: #ffffff;
-  background-color: #333333;
+  background: transparent;
+  box-shadow: none;
 }
 
 #workspaces button.urgent {
-  color: #ffffff;
-  background-color: #444444;
+  color: #F7768E;
+  background: transparent;
 }
 
 #network,

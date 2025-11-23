@@ -14,7 +14,19 @@ set $menu fuzzel
 
 ### Output configuration
 # You can get the names of your outputs by running: swaymsg -t get_outputs
-output eDP1 pos 0 0 res 2880x1920@120Hz
+output eDP-1 pos 0 0 res 2880x1920@120Hz scale 2
+
+### Appearance
+default_border pixel 1
+hide_edge_borders smart
+gaps inner 0
+gaps outer 0
+
+# Tokyo Night theme borders
+# class                 border  bg      text    indicator child_border
+client.focused          #00C0A3 #00C0A3 #16161E #00C0A3   #00C0A3
+client.unfocused        #292e42 #292e42 #787C99 #292e42   #292e42
+client.focused_inactive #292e42 #292e42 #787C99 #292e42   #292e42
 
 ### Input configuration
 #
@@ -32,9 +44,13 @@ output eDP1 pos 0 0 res 2880x1920@120Hz
 # You can also configure each device individually.
 # Read `man 5 sway-input` for more information about this section.
 
+### Seat configuration
+seat * xcursor_theme phinger-cursors-dark 24
+
 ### Autostart
 #
-exec swaybg -i @backgroundImage@
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
+exec swaybg -i @backgroundImage@ -m fill
 exec waybar
 exec mako
 
@@ -155,20 +171,18 @@ exec mako
 # Resizing containers:
 #
 mode "resize" {
-    # left will shrink the containers width
-    # right will grow the containers width
-    # up will shrink the containers height
-    # down will grow the containers height
-    bindsym $left resize shrink width 10px
-    bindsym $down resize grow height 10px
-    bindsym $up resize shrink height 10px
-    bindsym $right resize grow width 10px
+    # h/left = shrink width, l/right = grow width
+    # k/up = grow height, j/down = shrink height
+    bindsym $left resize shrink width 30px
+    bindsym $down resize shrink height 30px
+    bindsym $up resize grow height 30px
+    bindsym $right resize grow width 30px
 
     # Ditto, with arrow keys
-    bindsym Left resize shrink width 10px
-    bindsym Down resize grow height 10px
-    bindsym Up resize shrink height 10px
-    bindsym Right resize grow width 10px
+    bindsym Left resize shrink width 30px
+    bindsym Down resize shrink height 30px
+    bindsym Up resize grow height 30px
+    bindsym Right resize grow width 30px
 
     # Return to default mode
     bindsym Return mode "default"

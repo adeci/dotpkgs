@@ -1,6 +1,6 @@
 {
   "layer": "top",
-  "position": "bottom",
+  "position": "top",
   "height": 20,
   "spacing": 0,
 
@@ -28,16 +28,8 @@
     "all-outputs": true,
     "format": "{index}",
     "persistent-workspaces": {
-      "1": [],
-      "2": [],
-      "3": [],
-      "4": [],
-      "5": [],
-      "6": [],
-      "7": [],
-      "8": [],
-      "9": [],
-      "10": []
+      "1": [], "2": [], "3": [], "4": [], "5": [],
+      "6": [], "7": [], "8": [], "9": [], "10": []
     }
   },
 
@@ -84,7 +76,8 @@
   },
 
   "temperature": {
-    "hwmon-path": "/sys/class/hwmon/hwmon5/temp1_input",
+    "hwmon-path-abs": "/sys/devices/pci0000:00/0000:00:18.3/hwmon",
+    "input-filename": "temp1_input",
     "critical-threshold": 80,
     "format": "TMP {temperatureC:>3}°C",
     "tooltip": false,
@@ -111,7 +104,7 @@
 
   "pulseaudio": {
     "format": "VOL {volume:>3}%",
-    "format-muted": "VOL muted",
+    "format-muted": "VOL  MTD",
     "tooltip": false,
     "format-icons": {
       "default": ["", "", ""]
