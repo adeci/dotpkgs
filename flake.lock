@@ -63,11 +63,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1763786680,
-        "narHash": "sha256-tNKxG9qfjB+IQKNL+dpp8s+FW7kuQZ0pvA6l3OQicOs=",
+        "lastModified": 1763898969,
+        "narHash": "sha256-JyCGLMbsPV/eFLHB8SsBYM4WOFvh7ZDfl+FJO2vt+q8=",
         "owner": "adeci",
         "repo": "wrappers",
-        "rev": "4fa69918b445f40a854ec9e10d5a827716e7d43e",
+        "rev": "bf8f770ecdd3512f10bc3e564f44cb621dfa841c",
         "type": "github"
       },
       "original": {

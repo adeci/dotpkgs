@@ -22,25 +22,58 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        wrapperDirs = builtins.readDir ./wrappers;
+        # Simple wrappers (no parameters)
+        kitty = (import ./wrappers/kitty/module.nix { inherit pkgs wrappers; }).kitty;
+        fuzzel = (import ./wrappers/fuzzel/module.nix { inherit pkgs wrappers; }).fuzzel;
+        mako = (import ./wrappers/mako/module.nix { inherit pkgs wrappers; }).mako;
+        btop = (import ./wrappers/btop/module.nix { inherit pkgs wrappers; }).btop;
 
-        wrapperNames = builtins.attrNames (
-          pkgs.lib.filterAttrs (name: type: type == "directory") wrapperDirs
-        );
+        # Overridable wrappers
+        waybar = pkgs.lib.makeOverridable (
+          {
+            battery ? false,
+            bluetooth ? false,
+            backlight ? false,
+          }:
+          (import ./wrappers/waybar/module.nix {
+            inherit
+              pkgs
+              wrappers
+              battery
+              bluetooth
+              backlight
+              ;
+          }).waybar
+        ) { };
 
-        packages = builtins.listToAttrs (
-          map (name: {
-            inherit name;
-            value =
-              let
-                module = import ./wrappers/${name}/module.nix { inherit pkgs wrappers; };
-              in
-              module.${name};
-          }) wrapperNames
-        );
+        sway = pkgs.lib.makeOverridable (
+          {
+            outputs ? [
+              {
+                name = "eDP-1";
+                resolution = "2880x1920@120Hz";
+                scale = 2;
+                position = "0 0";
+              }
+            ],
+          }:
+          (import ./wrappers/sway/module.nix {
+            inherit pkgs wrappers outputs;
+          }).sway
+        ) { };
       in
       {
-        packages = packages;
+        packages = {
+          inherit
+            kitty
+            fuzzel
+            mako
+            btop
+            waybar
+            sway
+            ;
+        };
+
         formatter = pkgs.nixfmt-tree;
       }
     );
