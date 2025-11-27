@@ -1,16 +1,13 @@
 {
   pkgs,
   wrappers,
-  battery ? true,
-  bluetooth ? true,
-  backlight ? true,
   ...
 }:
 let
-  settings = import ./settings.nix { inherit battery bluetooth backlight; };
+  settings = import ./settings.nix;
 in
 {
-  waybar =
+  waybar-laptop =
     (wrappers.wrapperModules.waybar.apply {
       inherit pkgs settings;
       "style.css".path = ./style.css;

@@ -5,7 +5,8 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     wrappers = {
-      url = "github:adeci/wrappers?ref=adeci-wrappers";
+      #url = "github:adeci/wrappers?ref=adeci-wrappers";
+      url = "path:///home/alex/git/wrappers";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -22,57 +23,16 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        # Simple wrappers (no parameters)
-        kitty = (import ./wrappers/kitty/module.nix { inherit pkgs wrappers; }).kitty;
-        fuzzel = (import ./wrappers/fuzzel/module.nix { inherit pkgs wrappers; }).fuzzel;
-        mako = (import ./wrappers/mako/module.nix { inherit pkgs wrappers; }).mako;
-        btop = (import ./wrappers/btop/module.nix { inherit pkgs wrappers; }).btop;
+        wrapperDirs = builtins.attrNames (
+          pkgs.lib.filterAttrs (name: type: type == "directory") (builtins.readDir ./wrappers)
+        );
 
-        # Overridable wrappers
-        waybar = pkgs.lib.makeOverridable (
-          {
-            battery ? false,
-            bluetooth ? false,
-            backlight ? false,
-          }:
-          (import ./wrappers/waybar/module.nix {
-            inherit
-              pkgs
-              wrappers
-              battery
-              bluetooth
-              backlight
-              ;
-          }).waybar
-        ) { };
+        importWrapper = dir: import ./wrappers/${dir}/module.nix { inherit pkgs wrappers; };
 
-        sway = pkgs.lib.makeOverridable (
-          {
-            outputs ? [
-              {
-                name = "eDP-1";
-                resolution = "2880x1920@120Hz";
-                scale = 2;
-                position = "0 0";
-              }
-            ],
-          }:
-          (import ./wrappers/sway/module.nix {
-            inherit pkgs wrappers outputs;
-          }).sway
-        ) { };
+        allPackages = builtins.foldl' (acc: dir: acc // (importWrapper dir)) { } wrapperDirs;
       in
       {
-        packages = {
-          inherit
-            kitty
-            fuzzel
-            mako
-            btop
-            waybar
-            sway
-            ;
-        };
+        packages = allPackages;
 
         formatter = pkgs.nixfmt-tree;
       }

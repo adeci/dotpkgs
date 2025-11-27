@@ -41,10 +41,9 @@ window#waybar {
 
 #network,
 #custom-tailscale,
-#battery,
-#custom-battery-mah,
-#cpu,
-#temperature,
+#custom-battery,
+#custom-cpu,
+#custom-gpu,
 #memory,
 #disk,
 #backlight,
@@ -62,16 +61,4 @@ window#waybar {
 
 #clock {
   border-right: none;
-}
-
-#custom-battery-mah {
-  padding: 0 8px 0 8px;
-}
-
-#temperature {
-  padding: 0 8px 0 8px;
-}
-
-#temperature.critical {
-  color: #F7768E;
 }

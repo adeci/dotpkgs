@@ -1,41 +1,21 @@
 {
-  battery ? true,
-  bluetooth ? true,
-  backlight ? true,
-}:
-let
-  modulesRight = [
-    "network"
-    "custom/tailscale"
-  ]
-  ++ (if bluetooth then [ "bluetooth" ] else [ ])
-  ++ [
-    "temperature"
-    "cpu"
-    "memory"
-    "disk"
-  ]
-  ++ (if backlight then [ "backlight" ] else [ ])
-  ++ [ "pulseaudio" ]
-  ++ (
-    if battery then
-      [
-        "battery"
-        "custom/battery-mah"
-      ]
-    else
-      [ ]
-  )
-  ++ [ "clock" ];
-in
-{
   layer = "top";
   position = "top";
   height = 20;
   spacing = 0;
 
   modules-left = [ "sway/workspaces" ];
-  modules-right = modulesRight;
+  modules-right = [
+    "network"
+    "custom/tailscale"
+    "bluetooth"
+    "custom/cpu"
+    "custom/gpu"
+    "memory"
+    "disk"
+    "pulseaudio"
+    "clock"
+  ];
 
   "sway/workspaces" = {
     disable-scroll = false;
@@ -56,10 +36,13 @@ in
   };
 
   network = {
-    format-wifi = "NET {essid:>10} {ipaddr:>15} ↓{bandwidthDownBits:>8} ↑{bandwidthUpBits:>8}";
+    format-wifi = "NET {ipaddr:>15} ↓{bandwidthDownBits:>8} ↑{bandwidthUpBits:>8}";
     format-ethernet = "NET {ipaddr:>15} ↓{bandwidthDownBits:>8} ↑{bandwidthUpBits:>8}";
     format-disconnected = "NET Disconnected";
-    tooltip = false;
+    tooltip = true;
+    tooltip-format-wifi = "{essid} ({signalStrength}%)";
+    tooltip-format-ethernet = "{ifname}";
+    on-click = "nmgui";
     interval = 1;
   };
 
@@ -71,17 +54,32 @@ in
     return-type = "";
   };
 
-  cpu = {
-    format = "CPU {usage:>3}%";
+  "custom/cpu" = {
+    exec = ''
+      usage=$(awk '/^cpu / {printf "%3d", ($2+$4)*100/($2+$4+$5)}' /proc/stat)
+      temp=$(awk '{printf "%3d", $1/1000}' /sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon*/temp1_input 2>/dev/null | head -1)
+      if [ "$temp" -ge 80 ]; then
+        printf "CPU %s%% <span color='#F7768E'>%s°C</span>" "$usage" "$temp"
+      else
+        printf "CPU %s%% %s°C" "$usage" "$temp"
+      fi
+    '';
+    format = "{}";
     tooltip = false;
     interval = 1;
   };
 
-  temperature = {
-    hwmon-path-abs = "/sys/devices/pci0000:00/0000:00:18.3/hwmon";
-    input-filename = "temp1_input";
-    critical-threshold = 80;
-    format = "TMP {temperatureC:>3}°C";
+  "custom/gpu" = {
+    exec = ''
+      usage=$(cat /sys/class/drm/card*/device/gpu_busy_percent 2>/dev/null | head -1 || echo "0")
+      temp=$(awk '{printf "%3d", $1/1000}' /sys/class/drm/card*/device/hwmon/hwmon*/temp1_input 2>/dev/null | head -1)
+      if [ "$temp" -ge 80 ]; then
+        printf "GPU %3d%% <span color='#F7768E'>%s°C</span>" "$usage" "$temp"
+      else
+        printf "GPU %3d%% %s°C" "$usage" "$temp"
+      fi
+    '';
+    format = "{}";
     tooltip = false;
     interval = 1;
   };
@@ -131,57 +129,14 @@ in
     };
     actions.on-click-right = "mode";
   };
-}
-// (
-  if battery then
-    {
-      battery = {
-        states = {
-          warning = 20;
-          critical = 10;
-        };
-        format = "BAT {capacity:>3}%";
-        format-charging = "<span color='#41A6B5'>BAT</span> {capacity:>3}%";
-        format-warning = "<span color='#E0AF68'>BAT</span> {capacity:>3}%";
-        format-critical = "<span color='#F7768E'>BAT</span> {capacity:>3}%";
-        tooltip = false;
-        interval = 1;
-      };
 
-      "custom/battery-mah" = {
-        exec = "awk '{printf \"%dmAh\", $1/1000}' /sys/class/power_supply/BAT*/charge_now 2>/dev/null || echo 'N/A'";
-        format = "CAP {}";
-        tooltip = false;
-        interval = 1;
-      };
-    }
-  else
-    { }
-)
-// (
-  if backlight then
-    {
-      backlight = {
-        format = "BRT {percent:>3}%";
-        tooltip = false;
-      };
-    }
-  else
-    { }
-)
-// (
-  if bluetooth then
-    {
-      bluetooth = {
-        format = "BLU {status}";
-        format-on = "BLU ON";
-        format-off = "BLU OFF";
-        format-connected = "BLU ON";
-        format-disabled = "BLU OFF";
-        tooltip = false;
-        on-click = "blueman-manager";
-      };
-    }
-  else
-    { }
-)
+  bluetooth = {
+    format = "BLU {status}";
+    format-on = "BLU ON";
+    format-off = "BLU OFF";
+    format-connected = "BLU ON";
+    format-disabled = "BLU OFF";
+    tooltip = false;
+    on-click = "blueman-manager";
+  };
+}
