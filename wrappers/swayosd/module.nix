@@ -4,6 +4,12 @@
     (wrappers.wrapperModules.swayosd.apply {
       inherit pkgs;
 
+      settings = {
+        server = {
+          top_margin = 0.4;
+        };
+      };
+
       style.content = ''
         window {
           background: #000000;

@@ -7,7 +7,6 @@
   modules-left = [ "sway/workspaces" ];
   modules-right = [
     "network"
-    "custom/tailscale"
     "bluetooth"
     "custom/cpu"
     "custom/gpu"
@@ -44,14 +43,6 @@
     tooltip-format-ethernet = "{ifname}";
     on-click = "nmgui";
     interval = 1;
-  };
-
-  "custom/tailscale" = {
-    exec = "tailscale status --json 2>/dev/null | jq -r 'if .BackendState == \"Running\" then \"VPN \" + (.Self.TailscaleIPs[0] // \"N/A\") else \"VPN Off\" end'";
-    interval = 5;
-    format = "{}";
-    tooltip = false;
-    return-type = "";
   };
 
   "custom/cpu" = {

@@ -7,7 +7,6 @@
   modules-left = [ "sway/workspaces" ];
   modules-right = [
     "network"
-    "custom/tailscale"
     "bluetooth"
     "custom/cpu"
     "custom/gpu"
@@ -46,14 +45,6 @@
     tooltip-format-ethernet = "{ifname}";
     on-click = "nmgui";
     interval = 1;
-  };
-
-  "custom/tailscale" = {
-    exec = "tailscale status --json 2>/dev/null | jq -r 'if .BackendState == \"Running\" then \"VPN \" + (.Self.TailscaleIPs[0] // \"N/A\") else \"VPN Off\" end'";
-    interval = 5;
-    format = "{}";
-    tooltip = false;
-    return-type = "";
   };
 
   "custom/cpu" = {
@@ -134,17 +125,26 @@
 
   "custom/battery" = {
     exec = ''
-      cap=$(cat /sys/class/power_supply/BAT*/capacity 2>/dev/null | head -1)
-      mah=$(awk '{printf "%5d", $1/1000}' /sys/class/power_supply/BAT*/charge_now 2>/dev/null | head -1)
-      status=$(cat /sys/class/power_supply/BAT*/status 2>/dev/null | head -1)
-      if [ "$status" = "Charging" ]; then
-        printf "<span color='#41A6B5'>BAT</span> %3d%% %smAh" "$cap" "$mah"
-      elif [ "$cap" -le 10 ]; then
-        printf "<span color='#F7768E'>BAT</span> %3d%% %smAh" "$cap" "$mah"
-      elif [ "$cap" -le 20 ]; then
-        printf "<span color='#E0AF68'>BAT</span> %3d%% %smAh" "$cap" "$mah"
+      bat=$(ls -d /sys/class/power_supply/BAT* /sys/class/power_supply/BATT 2>/dev/null | head -1)
+      cap=$(cat "$bat/capacity" 2>/dev/null)
+      status=$(cat "$bat/status" 2>/dev/null)
+      if [ -f "$bat/charge_now" ]; then
+        mah=$(awk '{printf "%d", $1/1000}' "$bat/charge_now")
+      elif [ -f "$bat/energy_now" ] && [ -f "$bat/voltage_now" ]; then
+        energy=$(cat "$bat/energy_now")
+        voltage=$(cat "$bat/voltage_now")
+        mah=$(awk "BEGIN {printf \"%d\", ($energy / $voltage) * 1000}")
       else
-        printf "BAT %3d%% %smAh" "$cap" "$mah"
+        mah="?"
+      fi
+      if [ "$status" = "Charging" ]; then
+        printf "<span color='#41A6B5'>BAT</span> %3d%% %5dmAh" "$cap" "$mah"
+      elif [ "$cap" -le 10 ]; then
+        printf "<span color='#F7768E'>BAT</span> %3d%% %5dmAh" "$cap" "$mah"
+      elif [ "$cap" -le 20 ]; then
+        printf "<span color='#E0AF68'>BAT</span> %3d%% %5dmAh" "$cap" "$mah"
+      else
+        printf "BAT %3d%% %5dmAh" "$cap" "$mah"
       fi
     '';
     format = "{}";
