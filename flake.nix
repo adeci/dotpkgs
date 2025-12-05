@@ -5,8 +5,8 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     wrappers = {
-      #url = "github:adeci/wrappers?ref=adeci-wrappers";
-      url = "path:///home/alex/git/wrappers";
+      url = "github:adeci/wrappers?ref=adeci-wrappers";
+      #url = "path:///home/alex/git/wrappers";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
