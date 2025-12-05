@@ -171,28 +171,18 @@ exec swayosd-server
 # Resizing containers:
 #
 mode "resize" {
-    # Grow in direction of key (push edge outward)
-    bindsym $left resize grow left 30px
-    bindsym $down resize grow down 30px
-    bindsym $up resize grow up 30px
-    bindsym $right resize grow right 30px
+    # h/Left = shrink width, l/Right = grow width
+    # k/Up = shrink height, j/Down = grow height
+    bindsym $left resize shrink width 30px
+    bindsym $down resize grow height 30px
+    bindsym $up resize shrink height 30px
+    bindsym $right resize grow width 30px
 
-    # Shrink in direction of key (pull edge inward)
-    bindsym Shift+$left resize shrink left 30px
-    bindsym Shift+$down resize shrink down 30px
-    bindsym Shift+$up resize shrink up 30px
-    bindsym Shift+$right resize shrink right 30px
-
-    # Ditto, with arrow keys
-    bindsym Left resize grow left 30px
-    bindsym Down resize grow down 30px
-    bindsym Up resize grow up 30px
-    bindsym Right resize grow right 30px
-
-    bindsym Shift+Left resize shrink left 30px
-    bindsym Shift+Down resize shrink down 30px
-    bindsym Shift+Up resize shrink up 30px
-    bindsym Shift+Right resize shrink right 30px
+    # Arrow keys
+    bindsym Left resize shrink width 30px
+    bindsym Down resize grow height 30px
+    bindsym Up resize shrink height 30px
+    bindsym Right resize grow width 30px
 
     # Return to default mode
     bindsym Return mode "default"
@@ -225,3 +215,9 @@ bindsym $mod+r mode "resize"
 
     # Lock screen
     bindsym $mod+Shift+BackSpace exec swaylock
+
+    # Screen rotation (directional - affects focused output)
+    bindsym $mod+Ctrl+Down exec swaymsg output - transform normal
+    bindsym $mod+Ctrl+Up exec swaymsg output - transform 180
+    bindsym $mod+Ctrl+Left exec swaymsg output - transform 90
+    bindsym $mod+Ctrl+Right exec swaymsg output - transform 270
