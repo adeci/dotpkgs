@@ -54,6 +54,9 @@ exec waybar
 exec mako
 exec swayosd-server
 
+# Suspend when lid closes
+bindswitch --reload --locked lid:on exec systemctl suspend
+
 ### Key bindings
 #
 # Basics:
