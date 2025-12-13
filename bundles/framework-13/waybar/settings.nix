@@ -8,7 +8,6 @@
 
   modules-right = [
     "network"
-    "network#wwan"
     "bluetooth"
     "custom/cpu"
     "custom/gpu"
@@ -40,12 +39,12 @@
 
   network = {
     interface = "wlp1s0";
-    format = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
-    format-wifi = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
-    format-ethernet = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
-    format-linked = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
-    format-disconnected = "{ifname}";
-    format-disabled = "{ifname}";
+    format = "W ↓{bandwidthDownBytes:>7} ↑{bandwidthUpBytes:>7}";
+    format-wifi = "W ↓{bandwidthDownBytes:>7} ↑{bandwidthUpBytes:>7}";
+    format-ethernet = "W ↓{bandwidthDownBytes:>7} ↑{bandwidthUpBytes:>7}";
+    format-linked = "W ↓{bandwidthDownBytes:>7} ↑{bandwidthUpBytes:>7}";
+    format-disconnected = "W ↓ ----/s ↑ ----/s";
+    format-disabled = "W ↓ ----/s ↑ ----/s";
     tooltip = true;
     tooltip-format = "{essid} ({signalStrength}%) {ipaddr}";
     tooltip-format-wifi = "{essid} ({signalStrength}%) {ipaddr}";
@@ -53,22 +52,6 @@
     tooltip-format-disconnected = "Disconnected";
     tooltip-format-disabled = "Disabled";
     on-click = "nmgui";
-    interval = 1;
-  };
-
-  "network#wwan" = {
-    interface = "wwan0";
-    format = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
-    format-wifi = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
-    format-ethernet = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
-    format-linked = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
-    format-disconnected = "{ifname}";
-    format-disabled = "{ifname}";
-    tooltip = true;
-    tooltip-format = "{ifname} {ipaddr}";
-    tooltip-format-disconnected = "Disconnected";
-    tooltip-format-disabled = "Disabled";
-    on-click = "modem-manager-gui";
     interval = 1;
   };
 

@@ -4,33 +4,7 @@
   ...
 }:
 let
-  waybar =
-    (wrappers.wrapperModules.waybar.apply {
-      inherit pkgs;
-      settings = (import ../../modules/waybar/settings.nix) // {
-        network = (import ../../modules/waybar/settings.nix).network // {
-          interface = "wlp195s0";
-          format = "<span color='#41A6B5'>↓{bandwidthDownBytes:>5} ↑{bandwidthUpBytes:>5}</span>";
-          format-wifi = "<span color='#41A6B5'>↓{bandwidthDownBytes:>5} ↑{bandwidthUpBytes:>5}</span>";
-          format-ethernet = "<span color='#41A6B5'>↓{bandwidthDownBytes:>5} ↑{bandwidthUpBytes:>5}</span>";
-          format-linked = "<span color='#41A6B5'>↓{bandwidthDownBytes:>5} ↑{bandwidthUpBytes:>5}</span>";
-          format-disconnected = "<span color='#41A6B5'>--</span>";
-          format-disabled = "<span color='#41A6B5'>--</span>";
-        };
-        "network#wwan" = (import ../../modules/waybar/settings.nix)."network#wwan" // {
-          interface = "wwp197s0f4u1i4";
-          format = "<span color='#bb9af7'>↓{bandwidthDownBytes:>5} ↑{bandwidthUpBytes:>5}</span>";
-          format-wifi = "<span color='#bb9af7'>↓{bandwidthDownBytes:>5} ↑{bandwidthUpBytes:>5}</span>";
-          format-ethernet = "<span color='#bb9af7'>↓{bandwidthDownBytes:>5} ↑{bandwidthUpBytes:>5}</span>";
-          format-linked = "<span color='#bb9af7'>↓{bandwidthDownBytes:>5} ↑{bandwidthUpBytes:>5}</span>";
-          format-disconnected = "<span color='#bb9af7'>--</span>";
-          format-disabled = "<span color='#bb9af7'>--</span>";
-        };
-      };
-      "style.css".content = builtins.replaceStrings [ "font-size: 11px" ] [ "font-size: 10px" ] (
-        builtins.readFile ../../modules/waybar/style.css
-      );
-    }).wrapper;
+  waybar = (import ./waybar/module.nix { inherit pkgs wrappers; }).waybar;
 
   kanshi =
     (wrappers.wrapperModules.kanshi.apply {

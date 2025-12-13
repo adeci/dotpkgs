@@ -4,25 +4,7 @@
   ...
 }:
 let
-  waybar =
-    (wrappers.wrapperModules.waybar.apply {
-      inherit pkgs;
-      settings = (import ../../modules/waybar/settings.nix) // {
-        modules-right = [
-          "network"
-          "bluetooth"
-          "custom/cpu"
-          "custom/gpu"
-          "memory"
-          "disk"
-          "backlight"
-          "pulseaudio"
-          "custom/battery"
-          "clock"
-        ];
-      };
-      "style.css".path = ../../modules/waybar/style.css;
-    }).wrapper;
+  waybar = (import ./waybar/module.nix { inherit pkgs wrappers; }).waybar;
 
   kanshi =
     (wrappers.wrapperModules.kanshi.apply {
