@@ -40,6 +40,7 @@ window#waybar {
 }
 
 #network,
+#network.wwan,
 #custom-battery,
 #custom-cpu,
 #custom-gpu,
@@ -60,4 +61,12 @@ window#waybar {
 
 #clock {
   border-right: none;
+}
+
+#network.disabled {
+  color: #666666;
+}
+
+#network.wwan.disabled {
+  color: #666666;
 }

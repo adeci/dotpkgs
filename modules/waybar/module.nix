@@ -3,13 +3,11 @@
   wrappers,
   ...
 }:
-let
-  settings = import ./settings.nix;
-in
 {
-  waybar-laptop =
+  waybar =
     (wrappers.wrapperModules.waybar.apply {
-      inherit pkgs settings;
+      inherit pkgs;
+      settings = import ./settings.nix;
       "style.css".path = ./style.css;
     }).wrapper;
 }

@@ -5,8 +5,10 @@
   spacing = 0;
 
   modules-left = [ "sway/workspaces" ];
+
   modules-right = [
     "network"
+    "network#wwan"
     "bluetooth"
     "custom/cpu"
     "custom/gpu"
@@ -37,19 +39,42 @@
   };
 
   network = {
-    format-wifi = "NET {ipaddr:>15} ↓{bandwidthDownBits:>8} ↑{bandwidthUpBits:>8}";
-    format-ethernet = "NET {ipaddr:>15} ↓{bandwidthDownBits:>8} ↑{bandwidthUpBits:>8}";
-    format-disconnected = "NET Disconnected";
+    interface = "wlp1s0";
+    format = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
+    format-wifi = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
+    format-ethernet = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
+    format-linked = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
+    format-disconnected = "{ifname}";
+    format-disabled = "{ifname}";
     tooltip = true;
-    tooltip-format-wifi = "{essid} ({signalStrength}%)";
-    tooltip-format-ethernet = "{ifname}";
+    tooltip-format = "{essid} ({signalStrength}%) {ipaddr}";
+    tooltip-format-wifi = "{essid} ({signalStrength}%) {ipaddr}";
+    tooltip-format-ethernet = "{ifname} {ipaddr}";
+    tooltip-format-disconnected = "Disconnected";
+    tooltip-format-disabled = "Disabled";
     on-click = "nmgui";
+    interval = 1;
+  };
+
+  "network#wwan" = {
+    interface = "wwan0";
+    format = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
+    format-wifi = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
+    format-ethernet = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
+    format-linked = "{ifname} ↓{bandwidthDownBytes:>6} ↑{bandwidthUpBytes:>6}";
+    format-disconnected = "{ifname}";
+    format-disabled = "{ifname}";
+    tooltip = true;
+    tooltip-format = "{ifname} {ipaddr}";
+    tooltip-format-disconnected = "Disconnected";
+    tooltip-format-disabled = "Disabled";
+    on-click = "modem-manager-gui";
     interval = 1;
   };
 
   "custom/cpu" = {
     exec = ''
-      usage=$(awk '/^cpu / {printf "%3d", ($2+$4)*100/($2+$4+$5)}' /proc/stat)
+      usage=$(top -bn2 -d0.05 | grep "Cpu(s)" | tail -1 | awk '{printf "%3.0f", 100-$8}')
       temp=$(awk '{printf "%3d", $1/1000}' /sys/devices/pci0000:00/0000:00:18.3/hwmon/hwmon*/temp1_input 2>/dev/null | head -1)
       if [ "$temp" -ge 80 ]; then
         printf "CPU %s%% <span color='#F7768E'>%s°C</span>" "$usage" "$temp"
@@ -105,7 +130,6 @@
   clock = {
     interval = 1;
     format = "{:%I:%M:%S %p}";
-    format-alt = "{:%H:%M:%S}";
     tooltip-format = "<tt><big>{:%B %Y}</big>\n{calendar}</tt>";
     calendar = {
       mode = "year";
@@ -120,7 +144,6 @@
         today = "<span color='#000000' background='#ffffff'><b>{}</b></span>";
       };
     };
-    actions.on-click-right = "mode";
   };
 
   "custom/battery" = {

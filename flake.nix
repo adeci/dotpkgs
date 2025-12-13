@@ -23,16 +23,30 @@
       let
         pkgs = nixpkgs.legacyPackages.${system};
 
-        wrapperDirs = builtins.attrNames (
-          pkgs.lib.filterAttrs (name: type: type == "directory") (builtins.readDir ./wrappers)
+        # Get all directories from modules/
+        moduleDirs = builtins.attrNames (
+          pkgs.lib.filterAttrs (name: type: type == "directory") (builtins.readDir ./modules)
         );
 
-        importWrapper = dir: import ./wrappers/${dir}/module.nix { inherit pkgs wrappers; };
+        # Get all directories from bundles/
+        bundleDirs = builtins.attrNames (
+          pkgs.lib.filterAttrs (name: type: type == "directory") (builtins.readDir ./bundles)
+        );
 
-        allPackages = builtins.foldl' (acc: dir: acc // (importWrapper dir)) { } wrapperDirs;
+        # Import a module
+        importModule = dir: import ./modules/${dir}/module.nix { inherit pkgs wrappers; };
+
+        # Import a bundle
+        importBundle = dir: import ./bundles/${dir}/module.nix { inherit pkgs wrappers; };
+
+        # Combine all packages from modules and bundles
+        modulePackages = builtins.foldl' (acc: dir: acc // (importModule dir)) { } moduleDirs;
+        bundlePackages = builtins.foldl' (acc: dir: acc // (importBundle dir)) { } bundleDirs;
       in
       {
-        packages = allPackages;
+        packages = modulePackages // {
+          bundles = bundlePackages;
+        };
 
         formatter = pkgs.nixfmt-tree;
       }
