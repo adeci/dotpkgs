@@ -245,6 +245,15 @@ window-rule {
     clip-to-geometry true
 }
 
+// Communication apps: open maximized
+window-rule {
+    match app-id=r#"^discord$"#
+    match app-id=r#"^vesktop$"#
+    match app-id=r#"^Element"#
+    match app-id=r#"^signal$"#
+    open-maximized true
+}
+
 // Example: block out two password managers from screen capture.
 // (This example rule is commented out with a "/-" in front.)
 /-window-rule {
@@ -280,6 +289,9 @@ binds {
     Mod+Shift+Slash { show-hotkey-overlay; }
 
     Mod+Return hotkey-overlay-title="Open a Terminal: kitty" { spawn "kitty"; }
+    Mod+Shift+Return hotkey-overlay-title="Open Terminal Here" {
+        spawn-sh r#"set -- $(niri msg -j focused-window 2>/dev/null | jq -r '.app_id, .pid') && [ "$1" = kitty ] && child=$(ps -o pid=,tty= --ppid "$2" | grep -v '?' | head -1 | awk '{print $1}') && [ -n "$child" ] && exec kitty -d "$(readlink -f /proc/$child/cwd)" || exec kitty"#
+    }
     Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "fuzzel"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
 
