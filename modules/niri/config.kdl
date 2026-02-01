@@ -52,8 +52,8 @@ input {
     trackpoint {
         // off
         // natural-scroll
-        // accel-speed 0.2
-        // accel-profile "flat"
+        accel-speed -0.5
+        accel-profile "flat"
         // scroll-method "on-button-down"
         // scroll-button 273
         // scroll-button-lock
@@ -77,6 +77,13 @@ input {
 // Find more information on the wiki:
 // https://yalter.github.io/niri/Configuration:-Outputs
 // Remember to uncomment the node by removing "/-"!
+
+// Lenovo ThinkPad X220 display
+output "Seiko Epson Corporation 0x3047 Unknown" {
+    mode "1366x768@60.002"
+    scale 1
+    transform "normal"
+}
 
 // fw13 upgraded dispkay
 output "BOE NE135A1M-NY1 Unknown" {
